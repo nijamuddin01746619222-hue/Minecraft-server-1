@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-background: #f4eedd;
+  --color-card: #ffffff;
+  --color-primary: #00e5ff;
+  --font-pixel: "Press Start 2P", monospace;
+  --font-sans: "Inter", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-[#f4eedd] text-gray-900 antialiased min-h-screen flex flex-col font-sans;
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .retro-border {
+    @apply border-2 border-black rounded-xl;
+  }
+  
+  .retro-shadow {
+    @apply shadow-[4px_4px_0px_0px_rgba(0,0,0,1)];
+  }
+
+  .retro-card {
+    @apply bg-white border-2 border-black rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)];
+  }
+  
+  .retro-btn {
+    @apply bg-primary text-black border-2 border-black rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] font-bold uppercase tracking-widest hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all active:translate-y-[4px] active:shadow-none;
+  }
+}
