@@ -27,7 +27,6 @@ export interface SiteSettings {
   homePebblesImage: string;
   rightSideBanner: string;
   maintenanceMode: boolean;
-  welcomeTextColor?: string;
   rankFeatures?: RankFeature[];
   onlinePlayers: {
     random: boolean;

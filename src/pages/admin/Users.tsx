@@ -3,6 +3,7 @@ import { db } from '../../lib/firebase';
 import { collection, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { formatPrice } from '../../lib/utils';
 import { useSettingsStore } from '../../store/useSettingsStore';
+import { useAuthStore } from '../../store/useAuthStore';
 import toast from 'react-hot-toast';
 import { Shield, ShieldAlert, Trash2 } from 'lucide-react';
 
@@ -10,6 +11,9 @@ export default function Users() {
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const { settings } = useSettingsStore();
+  const { user: currentUser } = useAuthStore();
+
+  const isSuperUser = currentUser?.email?.toLowerCase() === 'taher@gmail.com';
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -24,6 +28,18 @@ export default function Users() {
   }, []);
 
   const changeRole = async (userId: string, newRole: string) => {
+    if (!isSuperUser) {
+      toast.error('Only taher@gmail.com can modify user roles.');
+      return;
+    }
+    
+    // Prevent modifying the super user's own role just in case
+    const targetUser = users.find(u => u.id === userId);
+    if (targetUser?.email?.toLowerCase() === 'taher@gmail.com' && newRole !== 'admin' && newRole !== 'super_admin') {
+      toast.error('Cannot change the role of the primary owner.');
+      return;
+    }
+
     try {
       await updateDoc(doc(db, 'users', userId), {
         role: newRole
@@ -36,6 +52,11 @@ export default function Users() {
   };
 
   const deleteUser = async (userId: string) => {
+    if (!isSuperUser) {
+      toast.error('Only taher@gmail.com can delete users.');
+      return;
+    }
+
     if (confirm('Are you sure you want to entirely delete this user data? (Authentication must be deleted via Firebase Console)')) {
       try {
         await deleteDoc(doc(db, 'users', userId));
@@ -71,7 +92,8 @@ export default function Users() {
                     <select 
                       value={user.role || 'user'} 
                       onChange={(e) => changeRole(user.id, e.target.value)}
-                      className="retro-border px-2 py-1 bg-white text-xs font-bold uppercase cursor-pointer"
+                      disabled={!isSuperUser || user.email?.toLowerCase() === 'taher@gmail.com'}
+                      className="retro-border px-2 py-1 bg-white text-xs font-bold uppercase cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <option value="user">User</option>
                       <option value="moderator">Moderator</option>
@@ -84,7 +106,12 @@ export default function Users() {
                     {formatPrice(user.totalSpent || 0, settings.currency)}
                   </td>
                   <td className="p-4 text-right space-x-2">
-                    <button onClick={() => deleteUser(user.id)} className="p-2 text-red-500 hover:bg-red-500/10 rounded transition-colors" title="Delete Data">
+                    <button 
+                      onClick={() => deleteUser(user.id)} 
+                      disabled={!isSuperUser || user.email?.toLowerCase() === 'taher@gmail.com'}
+                      className="p-2 text-red-500 hover:bg-red-500/10 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed" 
+                      title="Delete Data"
+                    >
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </td>

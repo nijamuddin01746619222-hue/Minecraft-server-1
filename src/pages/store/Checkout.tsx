@@ -20,7 +20,6 @@ export default function Checkout() {
   const [email, setEmail] = useState(user?.email || '');
   const [couponCode, setCouponCode] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
-  const [voterId, setVoterId] = useState('');
   
   const [paymentMethod, setPaymentMethod] = useState<string>('');
   const [transactionId, setTransactionId] = useState('');
@@ -122,7 +121,6 @@ export default function Checkout() {
         userId: user?.id || null,
         minecraftUsername,
         email,
-        voterId,
         items,
         total: getFinalTotal(),
         subtotal: getTotal(),
@@ -365,17 +363,6 @@ export default function Checkout() {
                           />
                         </div>
                       )}
-
-                      <div>
-                        <label className="block text-sm font-bold text-gray-700 mb-1">Voter ID (Optional)</label>
-                        <input
-                          type="text"
-                          value={voterId}
-                          onChange={(e) => setVoterId(e.target.value)}
-                          className="w-full bg-white border-2 border-black rounded-lg px-4 py-3 text-black font-bold focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
-                          placeholder="If required for verification"
-                        />
-                      </div>
                     </div>
                   </div>
                 )}
