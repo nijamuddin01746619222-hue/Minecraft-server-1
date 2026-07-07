@@ -20,8 +20,6 @@ export default function StoreLayout() {
     { name: 'HOME', path: '/' },
     { name: 'RANKS', path: '/ranks' },
     { name: 'COINS', path: '/coins' },
-    { name: 'KEYS', path: '/keys' },
-    { name: 'BUNDLES', path: '/bundles' },
     { name: 'HISTORY', path: '/profile' },
     { name: 'SUPPORT', path: '/support' },
   ];
@@ -76,9 +74,6 @@ export default function StoreLayout() {
                   {link.name}
                 </NavLink>
               ))}
-              <NavLink to="/status" className="px-4 py-2 text-xs font-bold tracking-widest text-gray-600 hover:text-black transition-colors">
-                STATUS
-              </NavLink>
             </nav>
           </div>
 

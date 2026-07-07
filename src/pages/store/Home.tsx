@@ -88,7 +88,7 @@ export default function Home() {
           
           <div className="space-y-2 mt-6">
             <p className="font-bold text-lg sm:text-xl max-w-2xl mx-auto text-gray-200 drop-shadow-md">
-              Purchase Ranks, Coins, Keys and support the server.
+              Purchase Ranks, Coins and support the server.
             </p>
             <p className="font-bold text-sm sm:text-base max-w-2xl mx-auto text-gray-300 drop-shadow-md">
               Get exclusive perks, items, and stand out in the community!

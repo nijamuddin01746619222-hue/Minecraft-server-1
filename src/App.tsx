@@ -94,8 +94,6 @@ function App() {
           <Route path="category/:categoryId" element={<CategoryPage />} />
           <Route path="ranks" element={<CategoryPage type="ranks" />} />
           <Route path="coins" element={<CategoryPage type="coins" />} />
-          <Route path="keys" element={<CategoryPage type="keys" />} />
-          <Route path="bundles" element={<CategoryPage type="bundles" />} />
           <Route path="product/:id" element={<ProductDetails />} />
           <Route path="cart" element={<Cart />} />
           <Route path="checkout" element={<Checkout />} />

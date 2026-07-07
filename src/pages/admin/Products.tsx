@@ -228,8 +228,6 @@ export default function Products() {
                       <select value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full bg-gray-50 border-2 border-black rounded-lg p-3 text-black font-bold outline-none focus:ring-2 focus:ring-primary">
                         <option value="ranks">Ranks</option>
                         <option value="coins">Coins/Pebbles</option>
-                        <option value="keys">Keys</option>
-                        <option value="bundles">Bundles</option>
                         <option value="custom">Custom</option>
                       </select>
                     </div>

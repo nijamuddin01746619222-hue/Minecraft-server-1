@@ -40,9 +40,7 @@ export default function CategoryPage({ type }: { type?: string }) {
 
   const categoryTitles: Record<string, string> = {
     ranks: 'Server Ranks',
-    coins: 'Pebbles & Coins',
-    keys: 'Crate Keys',
-    bundles: 'Value Bundles'
+    coins: 'Pebbles & Coins'
   };
 
   if (loading) {
