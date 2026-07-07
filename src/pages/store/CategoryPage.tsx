@@ -6,6 +6,7 @@ import { useSettingsStore } from '../../store/useSettingsStore';
 import { formatPrice } from '../../lib/utils';
 import { ShoppingCart } from 'lucide-react';
 import { useCartStore } from '../../store/useCartStore';
+import { useAuthStore } from '../../store/useAuthStore';
 
 export default function CategoryPage({ type }: { type?: string }) {
   const { categoryId } = useParams();
@@ -15,6 +16,7 @@ export default function CategoryPage({ type }: { type?: string }) {
   const [loading, setLoading] = useState(true);
   const { settings } = useSettingsStore();
   const { addItem } = useCartStore();
+  const { user } = useAuthStore();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -55,7 +57,7 @@ export default function CategoryPage({ type }: { type?: string }) {
         </h1>
         <p className="text-gray-600 font-bold max-w-2xl mx-auto">
           {id === 'ranks' 
-            ? 'Unlock exclusive perks, commands & cosmetics. Build your legacy on CyanPlex.' 
+            ? 'Unlock exclusive perks, commands & cosmetics. Build your legacy on FIEXFALL.' 
             : 'Upgrade your gameplay and dominate the server.'}
         </p>
       </div>
@@ -83,15 +85,24 @@ export default function CategoryPage({ type }: { type?: string }) {
                     <span className="text-xl text-black font-black">{formatPrice(product.price, settings.currency)}</span>
                   )}
                 </div>
-                <button 
-                  onClick={() => {
-                    addItem({ ...product, quantity: 1 });
-                    navigate('/checkout');
-                  }}
-                  className="mt-4 w-full retro-btn py-3 text-sm flex items-center justify-center gap-2"
-                >
-                  <ShoppingCart className="w-4 h-4" /> Add to Cart
-                </button>
+                {user ? (
+                  <button 
+                    onClick={() => {
+                      addItem({ ...product, quantity: 1 });
+                      navigate('/checkout');
+                    }}
+                    className="mt-4 w-full retro-btn py-3 text-sm flex items-center justify-center gap-2"
+                  >
+                    <ShoppingCart className="w-4 h-4" /> Add to Cart
+                  </button>
+                ) : (
+                  <button 
+                    onClick={() => navigate('/auth')}
+                    className="mt-4 w-full retro-btn py-3 text-sm flex items-center justify-center gap-2 bg-yellow-400 text-black hover:bg-yellow-500"
+                  >
+                    LOGIN TO PURCHASE
+                  </button>
+                )}
               </div>
 
               {id === 'ranks' && product.rankData ? (

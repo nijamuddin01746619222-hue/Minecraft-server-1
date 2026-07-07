@@ -4,6 +4,7 @@ import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firesto
 import { db } from '../../lib/firebase';
 import { useSettingsStore } from '../../store/useSettingsStore';
 import { useCartStore } from '../../store/useCartStore';
+import { useAuthStore } from '../../store/useAuthStore';
 import { formatPrice } from '../../lib/utils';
 import { Zap, Tag, Check } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -12,6 +13,7 @@ export default function ProductDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { settings } = useSettingsStore();
+  const { user } = useAuthStore();
   const addItem = useCartStore(state => state.addItem);
   
   const [product, setProduct] = useState<any>(null);
@@ -153,12 +155,21 @@ export default function ProductDetails() {
             </button>
           </div>
           
-          <button 
-            onClick={handleBuy}
-            className="w-full retro-btn py-4 text-lg bg-green-400 hover:bg-green-500"
-          >
-            BUY NOW
-          </button>
+          {user ? (
+            <button 
+              onClick={handleBuy}
+              className="w-full retro-btn py-4 text-lg bg-green-400 hover:bg-green-500"
+            >
+              BUY NOW
+            </button>
+          ) : (
+            <button 
+              onClick={() => navigate('/auth')}
+              className="w-full retro-btn py-4 text-lg bg-yellow-400 hover:bg-yellow-500 text-black"
+            >
+              LOGIN TO PURCHASE
+            </button>
+          )}
           
           <div className="retro-card p-6 mt-8">
             <h3 className="font-pixel text-sm mb-4">Description</h3>

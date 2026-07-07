@@ -33,9 +33,9 @@ export default function StoreLayout() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-background" style={{'--theme-primary': settings.themePrimary} as any}>
+    <div className="min-h-screen flex flex-col bg-background overflow-x-hidden" style={{'--theme-primary': settings.themePrimary} as any}>
       {/* Navbar */}
-      <header className="bg-white retro-border border-b border-black sticky top-0 z-50">
+      <header className="bg-white border-b-4 border-black sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
           
           <div className="flex items-center gap-6">
@@ -200,7 +200,7 @@ export default function StoreLayout() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white retro-border border-t border-black mt-auto">
+      <footer className="bg-white border-t-4 border-black mt-auto">
         <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="col-span-1 md:col-span-2 space-y-4">

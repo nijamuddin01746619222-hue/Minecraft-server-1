@@ -3,11 +3,13 @@ import { useSettingsStore } from '../../store/useSettingsStore';
 import { formatPrice } from '../../lib/utils';
 import { Link, useNavigate } from 'react-router-dom';
 import { Trash2, Plus, Minus, ArrowRight } from 'lucide-react';
+import { useAuthStore } from '../../store/useAuthStore';
 import { ShoppingCart } from 'lucide-react';
 
 export default function Cart() {
   const { items, updateQuantity, removeItem, getSubtotal, getTotal } = useCartStore();
   const { settings } = useSettingsStore();
+  const { user } = useAuthStore();
   const navigate = useNavigate();
 
   if (items.length === 0) {
@@ -125,12 +127,21 @@ export default function Cart() {
               </div>
             </div>
             
-            <button 
-              onClick={() => navigate('/checkout')}
-              className="w-full retro-btn py-4 flex items-center justify-center gap-2"
-            >
-              PROCEED TO CHECKOUT <ArrowRight className="w-5 h-5" />
-            </button>
+            {user ? (
+              <button 
+                onClick={() => navigate('/checkout')}
+                className="w-full retro-btn py-4 flex items-center justify-center gap-2"
+              >
+                PROCEED TO CHECKOUT <ArrowRight className="w-5 h-5" />
+              </button>
+            ) : (
+              <button 
+                onClick={() => navigate('/auth')}
+                className="w-full retro-btn py-4 flex items-center justify-center gap-2 bg-yellow-400 text-black hover:bg-yellow-500"
+              >
+                LOGIN TO CHECKOUT <ArrowRight className="w-5 h-5" />
+              </button>
+            )}
             <Link to="/" className="w-full text-center text-xs font-bold text-gray-500 hover:text-black uppercase mt-4 block">
               Continue Shopping
             </Link>

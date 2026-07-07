@@ -64,25 +64,25 @@ export default function Home() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-16 pb-20 pt-8 px-4">
+    <div className="w-full space-y-16 pb-20 pt-8 px-2 md:px-4 overflow-hidden">
       
       {/* Hero Section */}
       <section className="text-center space-y-6">
-        <h1 className="text-5xl md:text-7xl font-black text-black font-pixel uppercase tracking-widest leading-tight">
+        <h1 className="text-5xl md:text-7xl font-black font-pixel uppercase tracking-widest leading-tight" style={{ color: settings.welcomeTextColor || '#000000' }}>
           Welcome to <span className="block">{settings.websiteName} Store</span>
         </h1>
         <div className="space-y-2">
-          <p className="text-gray-800 font-bold text-lg max-w-2xl mx-auto">
+          <p className="font-bold text-lg max-w-2xl mx-auto" style={{ color: settings.welcomeTextColor || '#1f2937' }}>
             Upgrade your gameplay with exclusive ranks and pebble packs.
           </p>
-          <p className="text-gray-600 font-bold text-sm max-w-2xl mx-auto">
+          <p className="font-bold text-sm max-w-2xl mx-auto" style={{ color: settings.welcomeTextColor || '#4b5563' }}>
             Unlock premium perks and dominate the server.
           </p>
         </div>
 
         {settings.bannerUrl && (
-          <div className="w-full max-w-3xl mx-auto pt-6">
-             <img src={settings.bannerUrl} alt="Store Banner" className="w-full h-auto object-cover rounded-xl retro-border shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]" />
+          <div className="w-full max-w-6xl mx-auto mt-8 px-2">
+             <img src={settings.bannerUrl} alt="Store Banner" className="w-full h-auto object-cover rounded-xl retro-border shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]" />
           </div>
         )}
 
@@ -145,7 +145,7 @@ export default function Home() {
           <div className="relative z-10 max-w-[60%]">
             <h2 className="text-3xl font-pixel text-black mb-3">Pebbles</h2>
             <p className="text-gray-800 font-bold leading-snug">
-              In-game currency for the CyanPlex store
+              In-game currency for the FIEXFALL store
             </p>
           </div>
           <div className="relative z-10">

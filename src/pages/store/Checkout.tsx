@@ -30,10 +30,15 @@ export default function Checkout() {
   const [agreeTerms, setAgreeTerms] = useState(false);
 
   useEffect(() => {
-    if (items.length === 0) {
-      navigate('/cart');
+    if (!user) {
+      toast.error('You must be logged in to checkout');
+      navigate('/auth');
+      return;
     }
-  }, [items, navigate]);
+    if (items.length === 0) {
+      navigate('/');
+    }
+  }, [items, navigate, user]);
 
   const activeMethods = Object.entries(settings.paymentMethods).filter(([_, method]) => method.enabled);
   const selectedMethodData = activeMethods.find(([key]) => key === paymentMethod)?.[1];

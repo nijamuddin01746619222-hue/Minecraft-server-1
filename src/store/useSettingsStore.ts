@@ -27,6 +27,7 @@ export interface SiteSettings {
   homePebblesImage: string;
   rightSideBanner: string;
   maintenanceMode: boolean;
+  welcomeTextColor?: string;
   rankFeatures?: RankFeature[];
   onlinePlayers: {
     random: boolean;
@@ -43,9 +44,9 @@ export interface SiteSettings {
 }
 
 const defaultSettings: SiteSettings = {
-  websiteName: 'CYANPLEX',
-  serverIp: 'play.cyanplex.com',
-  discordLink: 'https://discord.gg/cyanplex',
+  websiteName: 'FIEXFALL',
+  serverIp: 'play.fiexfall.com',
+  discordLink: 'https://discord.gg/fiexfall',
   currency: '৳',
   themePrimary: '#00e5ff',
   themeSecondary: '#0f172a',

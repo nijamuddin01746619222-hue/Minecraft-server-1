@@ -84,6 +84,13 @@ export default function Settings() {
               <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Discord Link</label>
               <input type="text" value={formData.discordLink} onChange={e => setFormData({...formData, discordLink: e.target.value})} className="w-full bg-white border-2 border-black rounded-lg p-3 text-black font-bold outline-none" />
             </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Welcome Text Color</label>
+              <div className="flex gap-2">
+                <input type="color" value={formData.welcomeTextColor || '#000000'} onChange={e => setFormData({...formData, welcomeTextColor: e.target.value})} className="h-12 w-12 cursor-pointer bg-white border-2 border-black rounded-lg p-1" />
+                <input type="text" value={formData.welcomeTextColor || '#000000'} onChange={e => setFormData({...formData, welcomeTextColor: e.target.value})} className="flex-1 bg-white border-2 border-black rounded-lg p-3 text-black font-bold outline-none uppercase" />
+              </div>
+            </div>
           </div>
           <div className="flex items-center justify-between p-4 bg-white border-2 border-black rounded-lg">
             <div>
