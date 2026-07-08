@@ -23,7 +23,7 @@ import Products from './pages/admin/Products';
 import Orders from './pages/admin/Orders';
 import Users from './pages/admin/Users';
 import Settings from './pages/admin/Settings';
-import Coupons from './pages/admin/Coupons';
+import Admins from './pages/admin/Admins';
 
 import { useAuthStore } from './store/useAuthStore';
 import { useSettingsStore } from './store/useSettingsStore';
@@ -114,7 +114,7 @@ function App() {
             <Route path="orders" element={<Orders />} />
             <Route path="users" element={<Users />} />
             <Route path="settings" element={<Settings />} />
-            <Route path="coupons" element={<Coupons />} />
+            <Route path="admins" element={<Admins />} />
           </Route>
         </Route>
 

@@ -21,7 +21,6 @@ export interface SiteSettings {
   themePrimary: string;
   themeSecondary: string;
   logoUrl: string;
-  bannerUrl: string;
   headerBannerUrl: string;
   homeRanksImage: string;
   homePebblesImage: string;
@@ -50,7 +49,6 @@ const defaultSettings: SiteSettings = {
   themePrimary: '#00e5ff',
   themeSecondary: '#0f172a',
   logoUrl: '',
-  bannerUrl: '',
   headerBannerUrl: '',
   homeRanksImage: '',
   homePebblesImage: '',

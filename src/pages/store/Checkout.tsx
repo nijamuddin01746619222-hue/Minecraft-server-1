@@ -18,8 +18,6 @@ export default function Checkout() {
   const [step, setStep] = useState(1);
   const [minecraftUsername, setMinecraftUsername] = useState(user?.minecraftUsername || '');
   const [email, setEmail] = useState(user?.email || '');
-  const [couponCode, setCouponCode] = useState('');
-  const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
   
   const [paymentMethod, setPaymentMethod] = useState<string>('');
   const [transactionId, setTransactionId] = useState('');
@@ -43,54 +41,7 @@ export default function Checkout() {
   const selectedMethodData = activeMethods.find(([key]) => key === paymentMethod)?.[1];
 
   const getFinalTotal = () => {
-    let sub = getTotal(); 
-    if (appliedCoupon) {
-      sub = sub - (sub * (appliedCoupon.discountPercentage / 100));
-    }
-    return Math.max(0, sub);
-  };
-
-  const handleApplyCoupon = async () => {
-    if (!couponCode.trim()) return;
-    const toastId = toast.loading('Verifying coupon...');
-    try {
-      const q = query(collection(db, 'coupons'), where('code', '==', couponCode.toUpperCase().trim()), where('enabled', '==', true));
-      const snap = await getDocs(q);
-      
-      if (snap.empty) {
-        toast.error('Invalid or expired coupon', { id: toastId });
-        return;
-      }
-      
-      const coupon = { id: snap.docs[0].id, ...snap.docs[0].data() } as any;
-
-      if (coupon.maxUses > 0 && (coupon.usedCount || 0) >= coupon.maxUses) {
-        toast.error('Coupon usage limit reached', { id: toastId });
-        return;
-      }
-      
-      if (coupon.expiresAt && new Date(coupon.expiresAt) < new Date()) {
-        toast.error('Coupon has expired', { id: toastId });
-        return;
-      }
-      
-      if (coupon.oncePerUser) {
-        const identifier = minecraftUsername.toLowerCase().trim() || email.toLowerCase().trim();
-        if (!identifier) {
-          toast.error('Please enter your Minecraft Username or Email first', { id: toastId });
-          return;
-        }
-        if (coupon.usedBy && coupon.usedBy.includes(identifier)) {
-          toast.error('You have already used this coupon', { id: toastId });
-          return;
-        }
-      }
-
-      setAppliedCoupon(coupon);
-      toast.success(`Coupon applied! ${coupon.discountPercentage}% off`, { id: toastId });
-    } catch (error) {
-      toast.error('Failed to apply coupon', { id: toastId });
-    }
+    return Math.max(0, getTotal());
   };
 
   const handleProceedToPayment = (e: any) => {
@@ -124,10 +75,6 @@ export default function Checkout() {
         items,
         total: getFinalTotal(),
         subtotal: getTotal(),
-        couponInfo: appliedCoupon ? {
-          code: appliedCoupon.code,
-          discountPercentage: appliedCoupon.discountPercentage
-        } : null,
         paymentMethod,
         transactionId,
         senderNumber,
@@ -136,15 +83,6 @@ export default function Checkout() {
       };
       
       await addDoc(collection(db, 'orders'), orderData);
-      
-      // Update coupon usage
-      if (appliedCoupon) {
-        const identifier = minecraftUsername.toLowerCase().trim() || email.toLowerCase().trim();
-        await updateDoc(doc(db, 'coupons', appliedCoupon.id), {
-          usedCount: increment(1),
-          usedBy: arrayUnion(identifier)
-        });
-      }
       
       clearCart();
       toast.success('Order placed successfully! Pending review.', { id: toastId });
@@ -197,45 +135,6 @@ export default function Checkout() {
                       placeholder="steve@example.com"
                     />
                   </div>
-                </div>
-
-                <div className="border-t-2 border-black pt-6">
-                  <h3 className="font-bold text-black mb-4 flex items-center gap-2">
-                    <Tag className="w-5 h-5" />
-                    Have a Coupon Code?
-                  </h3>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={couponCode}
-                      onChange={(e) => setCouponCode(e.target.value)}
-                      disabled={!!appliedCoupon}
-                      className="flex-1 bg-white border-2 border-black rounded-lg px-4 py-3 text-black font-bold uppercase tracking-wider disabled:opacity-50"
-                      placeholder="Enter code here"
-                    />
-                    {!appliedCoupon ? (
-                      <button
-                        type="button"
-                        onClick={handleApplyCoupon}
-                        className="bg-black hover:bg-gray-800 text-white font-bold px-6 py-3 rounded-lg transition-colors"
-                      >
-                        APPLY
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => { setAppliedCoupon(null); setCouponCode(''); }}
-                        className="bg-red-500 hover:bg-red-600 text-white font-bold px-6 py-3 rounded-lg transition-colors"
-                      >
-                        REMOVE
-                      </button>
-                    )}
-                  </div>
-                  {appliedCoupon && (
-                    <div className="mt-3 text-sm font-bold text-green-600 bg-green-50 p-3 rounded-lg border border-green-200">
-                      Code {appliedCoupon.code} applied! You get {appliedCoupon.discountPercentage}% off.
-                    </div>
-                  )}
                 </div>
 
                 {!user && (
@@ -379,14 +278,6 @@ export default function Checkout() {
               {items.map(item => {
                 let itemPrice = (item.discount || 0) > 0 ? item.price * (1 - item.discount! / 100) : item.price;
                 let finalItemPrice = itemPrice;
-                if (item.appliedCoupon) {
-                  if (item.appliedCoupon.type === 'percentage') {
-                    finalItemPrice -= itemPrice * (item.appliedCoupon.value / 100);
-                  } else {
-                    finalItemPrice -= item.appliedCoupon.value;
-                  }
-                  finalItemPrice = Math.max(0, finalItemPrice);
-                }
                 
                 return (
                   <div key={item.id} className="flex justify-between text-sm">
@@ -407,12 +298,6 @@ export default function Checkout() {
                 <span>{formatPrice(getTotal(), settings.currency)}</span>
               </div>
               
-              {appliedCoupon && (
-                <div className="flex justify-between text-green-600 text-sm font-bold">
-                  <span>Coupon ({appliedCoupon.code})</span>
-                  <span>-{appliedCoupon.discountPercentage}%</span>
-                </div>
-              )}
               
               <div className="flex justify-between items-center text-lg font-bold mt-2 pt-2 border-t-2 border-black">
                 <span className="text-black font-pixel text-sm">Total</span>

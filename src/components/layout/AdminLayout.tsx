@@ -12,7 +12,7 @@ import {
   CreditCard,
   Palette,
   Megaphone,
-  Globe
+  Globe, ShieldAlert
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { useSettingsStore } from '../../store/useSettingsStore';
@@ -21,7 +21,7 @@ import { auth } from '../../lib/firebase';
 import { signOut } from 'firebase/auth';
 
 export default function AdminLayout() {
-  const { setAdminLoggedIn } = useAuthStore();
+  const { user, setAdminLoggedIn } = useAuthStore();
   const { settings } = useSettingsStore();
   const navigate = useNavigate();
 
@@ -40,12 +40,15 @@ export default function AdminLayout() {
     { name: 'Products', path: '/admin/products', icon: Package },
     { name: 'Orders', path: '/admin/orders', icon: ShoppingCart },
     { name: 'Users', path: '/admin/users', icon: Users },
-    { name: 'Coupons', path: '/admin/coupons', icon: Ticket },
   ];
 
   const navItemsSettings = [
     { name: 'System Settings', path: '/admin/settings', icon: Settings },
   ];
+
+  if (user?.email?.toLowerCase() === 'taher@gmail.com') {
+    navItemsSettings.push({ name: 'Admins', path: '/admin/admins', icon: ShieldAlert } as any);
+  }
 
   return (
     <div className="flex h-screen bg-background">

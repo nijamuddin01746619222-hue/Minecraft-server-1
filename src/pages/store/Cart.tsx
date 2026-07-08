@@ -43,12 +43,7 @@ export default function Cart() {
           {items.map((item) => {
             let itemPrice = item.discount ? item.price * (1 - item.discount / 100) : item.price;
             let finalItemPrice = itemPrice;
-            
-            if (item.appliedCoupon) {
-              finalItemPrice -= itemPrice * (item.appliedCoupon.discountPercentage / 100);
-              finalItemPrice = Math.max(0, finalItemPrice);
-            }
-            
+
             return (
               <div key={item.id} className="bg-white retro-border border-black rounded-xl p-4 flex flex-col sm:grid sm:grid-cols-12 items-center gap-4 sm:gap-4 relative group hover:border-gray-600 transition-colors">
                 <div className="col-span-6 flex items-center gap-4 w-full">
@@ -62,11 +57,6 @@ export default function Cart() {
                   <div>
                     <h3 className="font-bold text-black text-lg">{item.name}</h3>
                     {item.category && <p className="text-xs text-gray-500 uppercase tracking-widest font-bold">{item.category}</p>}
-                    {item.appliedCoupon && (
-                      <span className="text-[10px] bg-green-100 text-green-700 px-2 py-1 rounded font-bold uppercase mt-1 inline-block border border-green-200">
-                        Coupon: {item.appliedCoupon.code}
-                      </span>
-                    )}
                   </div>
                 </div>
                 

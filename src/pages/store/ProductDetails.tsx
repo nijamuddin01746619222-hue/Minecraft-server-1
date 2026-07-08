@@ -19,9 +19,6 @@ export default function ProductDetails() {
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   
-  const [couponCode, setCouponCode] = useState('');
-  const [appliedCoupon, setAppliedCoupon] = useState<any>(null);
-  const [couponLoading, setCouponLoading] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -41,33 +38,6 @@ export default function ProductDetails() {
     fetchProduct();
   }, [id]);
 
-  const handleApplyCoupon = async () => {
-    if (!couponCode) return;
-    setCouponLoading(true);
-    try {
-      const q = query(collection(db, 'coupons'), where('code', '==', couponCode.toUpperCase()));
-      const snap = await getDocs(q);
-      
-      if (snap.empty) {
-        toast.error('Invalid coupon code');
-        setAppliedCoupon(null);
-        return;
-      }
-
-      const coupon = snap.docs[0].data();
-      if (!coupon.enabled) {
-        toast.error('This coupon is currently disabled');
-        return;
-      }
-      
-      setAppliedCoupon(coupon);
-      toast.success('Coupon applied!');
-    } catch (error) {
-      toast.error('Failed to verify coupon');
-    } finally {
-      setCouponLoading(false);
-    }
-  };
 
   if (loading) {
     return <div className="p-8 text-center animate-pulse font-pixel">LOADING...</div>;
@@ -81,17 +51,11 @@ export default function ProductDetails() {
   const storeDiscount = product.salePrice && product.salePrice > 0 ? (basePrice - product.salePrice) : 0;
   const priceAfterStoreDiscount = product.salePrice && product.salePrice > 0 ? product.salePrice : basePrice;
   
-  let finalPrice = priceAfterStoreDiscount;
-  let couponDiscountAmount = 0;
-  
-  if (appliedCoupon) {
-    couponDiscountAmount = finalPrice * (appliedCoupon.discountPercentage / 100);
-    finalPrice = Math.max(0, finalPrice - couponDiscountAmount);
-  }
+  const finalPrice = priceAfterStoreDiscount;
 
   const handleBuy = () => {
     // Add to cart and redirect to checkout
-    addItem({ ...product, quantity: 1, appliedCoupon });
+    addItem({ ...product, quantity: 1,  });
     navigate('/checkout');
   };
 
@@ -125,12 +89,6 @@ export default function ProductDetails() {
               </div>
             )}
             
-            {appliedCoupon && (
-              <div className="flex flex-col gap-1">
-                <span className="text-gray-500 font-bold uppercase tracking-widest text-xs">Coupon: {appliedCoupon.code}</span>
-                <span className="text-xl font-bold text-green-600">-{formatPrice(couponDiscountAmount, settings.currency)}</span>
-              </div>
-            )}
             
             <div className="pt-4 border-t-2 border-black">
               <span className="text-gray-500 font-bold uppercase tracking-widest text-xs block mb-1">Final Price</span>
@@ -138,22 +96,6 @@ export default function ProductDetails() {
             </div>
           </div>
           
-          <div className="flex gap-2">
-            <input 
-              type="text" 
-              placeholder="Coupon Code" 
-              className="flex-1 p-3 retro-border bg-white outline-none font-bold uppercase"
-              value={couponCode}
-              onChange={e => setCouponCode(e.target.value)}
-            />
-            <button 
-              onClick={handleApplyCoupon}
-              disabled={couponLoading || !couponCode}
-              className="retro-btn px-6 py-3"
-            >
-              APPLY
-            </button>
-          </div>
           
           {user ? (
             <button 

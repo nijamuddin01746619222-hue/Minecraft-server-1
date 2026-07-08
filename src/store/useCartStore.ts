@@ -11,7 +11,6 @@ export interface CartItem {
   image?: string;
   category?: string;
   type?: string;
-  appliedCoupon?: any;
 }
 
 interface CartState {
@@ -21,7 +20,7 @@ interface CartState {
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
   getSubtotal: () => number;
-  getTotal: (globalCouponDiscount?: number) => number;
+  getTotal: () => number;
 }
 
 export const useCartStore = create<CartState>()(
@@ -46,17 +45,12 @@ export const useCartStore = create<CartState>()(
         return items.reduce((acc, item) => {
           let price = item.salePrice && item.salePrice > 0 ? item.salePrice : item.price;
           
-          if (item.appliedCoupon) {
-            let couponDiscountAmount = price * (item.appliedCoupon.discountPercentage / 100);
-            price = Math.max(0, price - couponDiscountAmount);
-          }
-          
           return acc + price * item.quantity;
         }, 0);
       },
-      getTotal: (globalCouponDiscount = 0) => {
+      getTotal: () => {
         const subtotal = get().getSubtotal();
-        return Math.max(0, subtotal - globalCouponDiscount);
+        return Math.max(0, subtotal);
       },
     }),
     {

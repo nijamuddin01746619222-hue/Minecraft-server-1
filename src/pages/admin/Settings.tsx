@@ -130,7 +130,6 @@ export default function Settings() {
           <div>
             <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Main Store Banner (URL)</label>
             <div className="flex items-center gap-4">
-              <input type="text" placeholder="Main banner image for Home Page..." value={formData.bannerUrl || ''} onChange={e => setFormData({...formData, bannerUrl: e.target.value})} className="flex-1 bg-white border-2 border-black rounded-lg p-3 text-black font-bold outline-none" />
             </div>
           </div>
           <div>

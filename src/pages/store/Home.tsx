@@ -24,7 +24,7 @@ export default function Home() {
       try {
         const q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'), limit(10));
         const snap = await getDocs(q);
-        const fetched = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        const fetched = snap.docs.map(d => ({ id: d.id, ...d.data() } as any));
         // Filter out those without minecraftUsername
         const validOrders = fetched.filter(o => o.minecraftUsername);
         
