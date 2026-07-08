@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { db } from '../../lib/firebase';
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
-import { Plus, Edit2, Trash2, X, Image as ImageIcon } from 'lucide-react';
+import { Plus, Edit2, Trash2, X, Image as ImageIcon, Upload } from 'lucide-react';
+import ImageUpload from '../../components/ui/ImageUpload';
 import toast from 'react-hot-toast';
 
 export default function Products() {
@@ -298,13 +299,21 @@ export default function Products() {
                             <option value="No">No</option>
                           </select>
                         ) : (
-                          <input 
-                            type="text"
-                            value={formData.rankData[field.id] || ''}
-                            onChange={e => handleRankDataChange(field.id, e.target.value)}
-                            className="w-full bg-white border-2 border-black rounded p-2 text-sm font-bold"
-                            placeholder={field.placeholder}
-                          />
+                          field.id === 'namePrefixImage' ? (
+                            <ImageUpload 
+                              value={formData.rankData[field.id] || ''} 
+                              onChange={url => handleRankDataChange(field.id, url)} 
+                              placeholder={field.placeholder} 
+                            />
+                          ) : (
+                            <input 
+                              type="text"
+                              value={formData.rankData[field.id] || ''}
+                              onChange={e => handleRankDataChange(field.id, e.target.value)}
+                              className="w-full bg-white border-2 border-black rounded p-2 text-sm font-bold"
+                              placeholder={field.placeholder}
+                            />
+                          )
                         )}
                       </div>
                     ))}
