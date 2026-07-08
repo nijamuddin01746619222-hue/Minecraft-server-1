@@ -31,6 +31,7 @@ export interface SiteSettings {
     random: boolean;
     count: number;
   };
+  imgbbApiKey: string;
   footerText: string;
   paymentMethods: {
     bkash: { enabled: boolean; number: string; type: string };
@@ -58,6 +59,7 @@ const defaultSettings: SiteSettings = {
     random: true,
     count: 10
   },
+  imgbbApiKey: '2ce0eca99a727bc10ab762ebfeef3d02',
   footerText: '© 2026 Minecraft Store. All rights reserved.',
   paymentMethods: {
     bkash: { enabled: true, number: '01700000000', type: 'Personal' },

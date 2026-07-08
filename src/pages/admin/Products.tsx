@@ -250,7 +250,7 @@ export default function Products() {
                       ) : (
                         <div className="w-20 h-20 bg-gray-50 rounded-lg border-2 border-black border-dashed flex items-center justify-center shrink-0"><ImageIcon className="w-8 h-8 text-gray-400" /></div>
                       )}
-                      <input type="text" value={formData.image} onChange={e => setFormData({...formData, image: e.target.value})} className="w-full bg-gray-50 border-2 border-black rounded-lg p-3 text-black font-bold outline-none focus:ring-2 focus:ring-primary" placeholder="Image URL..." />
+                      <div className="w-full"><ImageUpload value={formData.image || ""} onChange={url => setFormData({...formData, image: url})} /></div>
                     </div>
                   </div>
                   

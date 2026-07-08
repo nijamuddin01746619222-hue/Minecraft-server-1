@@ -3,7 +3,8 @@ import { db } from '../../lib/firebase';
 import { doc, setDoc } from 'firebase/firestore';
 import { useSettingsStore, SiteSettings } from '../../store/useSettingsStore';
 import toast from 'react-hot-toast';
-import { Plus, Trash2, GripVertical } from 'lucide-react';
+import { Plus, Trash2, GripVertical, Upload } from 'lucide-react';
+import ImageUpload from '../../components/ui/ImageUpload';
 
 export default function Settings() {
   const { settings } = useSettingsStore();
@@ -98,6 +99,17 @@ export default function Settings() {
           
           <div className="flex flex-col gap-4 p-4 bg-white border-2 border-black rounded-lg">
             <div>
+              <h3 className="font-bold text-black uppercase">Image Upload API (imgBB)</h3>
+              <p className="text-xs text-gray-500 font-bold">Configure imgBB API Key for direct image uploads.</p>
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-gray-500 uppercase mb-2">ImgBB API Key</label>
+              <input type="text" value={formData.imgbbApiKey || ""} onChange={e => setFormData({...formData, imgbbApiKey: e.target.value})} className="w-full bg-white border-2 border-black rounded-lg p-3 text-black font-bold outline-none" placeholder="Enter imgBB API key" />
+            </div>
+          </div>
+          
+          <div className="flex flex-col gap-4 p-4 bg-white border-2 border-black rounded-lg">
+            <div>
               <h3 className="font-bold text-black uppercase">Online Players Count</h3>
               <p className="text-xs text-gray-500 font-bold">Configure how the online players number is shown.</p>
             </div>
@@ -117,15 +129,11 @@ export default function Settings() {
 
           <div>
             <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Logo Image (URL)</label>
-            <div className="flex items-center gap-4">
-              <input type="text" placeholder="Image URL (e.g. https://...)" value={formData.logoUrl || ''} onChange={e => setFormData({...formData, logoUrl: e.target.value})} className="flex-1 bg-white border-2 border-black rounded-lg p-3 text-black font-bold outline-none" />
-            </div>
+            <ImageUpload value={formData.logoUrl || ""} onChange={url => setFormData({...formData, logoUrl: url})} />
           </div>
           <div>
             <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Header / Logo Side Banner (URL)</label>
-            <div className="flex items-center gap-4">
-              <input type="text" placeholder="Banner image beside logo..." value={formData.headerBannerUrl || ''} onChange={e => setFormData({...formData, headerBannerUrl: e.target.value})} className="flex-1 bg-white border-2 border-black rounded-lg p-3 text-black font-bold outline-none" />
-            </div>
+            <ImageUpload value={formData.headerBannerUrl || ""} onChange={url => setFormData({...formData, headerBannerUrl: url})} placeholder="Banner image beside logo..." />
           </div>
           <div>
             <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Main Store Banner (URL)</label>
@@ -134,21 +142,15 @@ export default function Settings() {
           </div>
           <div>
             <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Home Page - "Ranks" Button Image</label>
-            <div className="flex items-center gap-4">
-              <input type="text" placeholder="Image URL (e.g. https://...)" value={formData.homeRanksImage || ''} onChange={e => setFormData({...formData, homeRanksImage: e.target.value})} className="flex-1 bg-white border-2 border-black rounded-lg p-3 text-black font-bold outline-none" />
-            </div>
+            <ImageUpload value={formData.homeRanksImage || ""} onChange={url => setFormData({...formData, homeRanksImage: url})} />
           </div>
           <div>
             <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Home Page - "Pebbles" Button Image</label>
-            <div className="flex items-center gap-4">
-              <input type="text" placeholder="Image URL (e.g. https://...)" value={formData.homePebblesImage || ''} onChange={e => setFormData({...formData, homePebblesImage: e.target.value})} className="flex-1 bg-white border-2 border-black rounded-lg p-3 text-black font-bold outline-none" />
-            </div>
+            <ImageUpload value={formData.homePebblesImage || ""} onChange={url => setFormData({...formData, homePebblesImage: url})} />
           </div>
           <div>
             <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Right Side Banner (URL)</label>
-            <div className="flex items-center gap-4">
-              <input type="text" placeholder="Image URL (e.g. https://...)" value={formData.rightSideBanner || ""} onChange={e => setFormData({...formData, rightSideBanner: e.target.value})} className="flex-1 bg-white border-2 border-black rounded-lg p-3 text-black font-bold outline-none" />
-            </div>
+            <ImageUpload value={formData.rightSideBanner || ""} onChange={url => setFormData({...formData, rightSideBanner: url})} />
           </div>
         </div>
       </div>
