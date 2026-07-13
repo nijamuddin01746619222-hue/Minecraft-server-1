@@ -33,6 +33,13 @@ export interface SiteSettings {
   };
   imgbbApiKey: string;
   footerText: string;
+  categories?: {
+    id: string;
+    name: string;
+    icon: string;
+    link: string;
+    enabled: boolean;
+  }[];
   paymentMethods: {
     bkash: { enabled: boolean; number: string; type: string };
     nagad: { enabled: boolean; number: string; type: string };
@@ -61,6 +68,13 @@ const defaultSettings: SiteSettings = {
   },
   imgbbApiKey: '2ce0eca99a727bc10ab762ebfeef3d02',
   footerText: '© 2026 Minecraft Store. All rights reserved.',
+  categories: [
+    { id: 'ranks', name: 'Ranks', icon: '', link: '/ranks', enabled: true },
+    { id: 'pebbles', name: 'Pebbles', icon: '', link: '/coins', enabled: true },
+    { id: 'plugins', name: 'Plugins', icon: '', link: '/plugins', enabled: true },
+    { id: 'setups', name: 'Server Setups', icon: '', link: '/setups', enabled: true },
+    { id: 'textures', name: 'Textures', icon: '', link: '/textures', enabled: true }
+  ],
   paymentMethods: {
     bkash: { enabled: true, number: '01700000000', type: 'Personal' },
     nagad: { enabled: false, number: '', type: 'Personal' },

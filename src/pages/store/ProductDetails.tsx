@@ -62,11 +62,25 @@ export default function ProductDetails() {
   return (
     <div className="max-w-6xl mx-auto w-full pt-8 pb-16">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-        <div className="retro-card p-8 flex flex-col items-center justify-center min-h-[400px]">
-          {product.image ? (
-            <img src={product.image} alt={product.name} className="w-full max-w-sm object-contain drop-shadow-2xl" />
-          ) : (
-            <Zap className="w-32 h-32 text-primary opacity-50" />
+        <div className="flex flex-col gap-4">
+          <div className="retro-card p-8 flex flex-col items-center justify-center min-h-[400px] relative">
+            {product.image ? (
+              <img id="main-product-image" src={product.image} alt={product.name} className="w-full max-w-sm object-contain drop-shadow-2xl" />
+            ) : (
+              <Zap className="w-32 h-32 text-primary opacity-50" />
+            )}
+          </div>
+          {product.gallery && product.gallery.length > 0 && (
+            <div className="grid grid-cols-4 gap-4">
+              {[product.image, ...product.gallery].filter(Boolean).map((img, idx) => (
+                <div key={idx} className="retro-card p-2 cursor-pointer hover:-translate-y-1 transition-transform" onClick={() => {
+                  const mainImg = document.getElementById('main-product-image') as HTMLImageElement;
+                  if (mainImg) mainImg.src = img;
+                }}>
+                  <img src={img} alt="Gallery" className="w-full h-20 object-cover" />
+                </div>
+              ))}
+            </div>
           )}
         </div>
         
@@ -100,7 +114,7 @@ export default function ProductDetails() {
           {user ? (
             <button 
               onClick={handleBuy}
-              className="w-full retro-btn py-4 text-lg bg-green-400 hover:bg-green-500"
+              className="w-full retro-btn py-4 text-lg"
             >
               BUY NOW
             </button>
@@ -148,19 +162,7 @@ export default function ProductDetails() {
               </div>
             )}
             
-            {product.features && product.features.length > 0 && (
-              <div className="mt-6">
-                <h3 className="font-pixel text-sm mb-4">Features</h3>
-                <ul className="space-y-2">
-                  {product.features.map((feature: string, idx: number) => (
-                    <li key={idx} className="flex items-start gap-2 text-gray-700 font-medium">
-                      <Check className="w-5 h-5 text-green-500 shrink-0" />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+
           </div>
         </div>
       </div>

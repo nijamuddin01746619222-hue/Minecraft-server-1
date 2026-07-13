@@ -38,9 +38,18 @@ export default function CategoryPage({ type }: { type?: string }) {
     }
   }, [id]);
 
-  const categoryTitles: Record<string, string> = {
+  const categoryTitles = settings.categories?.reduce((acc, cat) => {
+    acc[cat.link.replace('/', '')] = cat.name;
+    // Map /coins to coins/pebbles
+    if (cat.id === 'pebbles') acc['coins'] = cat.name;
+    acc[cat.id] = cat.name;
+    return acc;
+  }, {} as Record<string, string>) || {
     ranks: 'Server Ranks',
-    coins: 'Pebbles & Coins'
+    coins: 'Pebbles & Coins',
+    plugins: 'Plugins',
+    setups: 'Server Setups',
+    textures: 'Textures'
   };
 
   if (loading) {
@@ -68,21 +77,23 @@ export default function CategoryPage({ type }: { type?: string }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {products.map(product => (
             <div key={product.id} className="bg-white retro-border border-black rounded-xl overflow-hidden flex flex-col group hover:-translate-y-2 transition-all duration-300">
-              <div className="p-6 bg-gray-50 border-b-2 border-black text-center relative overflow-hidden group-hover:bg-primary/10 transition-colors">
-                {product.image && (
-                  <img src={product.image} alt={product.name} className="h-32 object-contain mx-auto group-hover:scale-110 transition-transform duration-300" />
-                )}
-                <h2 className="text-2xl font-bold font-pixel text-black mt-4">{product.name}</h2>
-                <div className="mt-2 flex items-center justify-center gap-2">
-                  {product.salePrice > 0 ? (
-                    <>
-                      <span className="text-sm text-gray-400 line-through font-bold">{formatPrice(product.price, settings.currency)}</span>
-                      <span className="text-xl text-primary font-black">{formatPrice(product.salePrice, settings.currency)}</span>
-                    </>
-                  ) : (
-                    <span className="text-xl text-black font-black">{formatPrice(product.price, settings.currency)}</span>
+              <div className="p-6 bg-gray-50 border-b-2 border-black text-center relative overflow-hidden group-hover:bg-primary/10 transition-colors flex flex-col items-center">
+                <Link to={`/product/${product.id}`} className="block w-full">
+                  {product.image && (
+                    <img src={product.image} alt={product.name} className="h-32 object-contain mx-auto group-hover:scale-110 transition-transform duration-300" />
                   )}
-                </div>
+                  <h2 className="text-2xl font-bold font-pixel text-black mt-4 group-hover:text-primary transition-colors">{product.name}</h2>
+                  <div className="mt-2 flex items-center justify-center gap-2">
+                    {product.salePrice > 0 ? (
+                      <>
+                        <span className="text-sm text-gray-400 line-through font-bold">{formatPrice(product.price, settings.currency)}</span>
+                        <span className="text-xl text-primary font-black">{formatPrice(product.salePrice, settings.currency)}</span>
+                      </>
+                    ) : (
+                      <span className="text-xl text-black font-black">{formatPrice(product.price, settings.currency)}</span>
+                    )}
+                  </div>
+                </Link>
                 {user ? (
                   <button 
                     onClick={() => {

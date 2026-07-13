@@ -18,10 +18,10 @@ export default function StoreLayout() {
 
   const navLinks = [
     { name: 'HOME', path: '/' },
-    { name: 'RANKS', path: '/ranks' },
-    { name: 'COINS', path: '/coins' },
-    { name: 'HISTORY', path: '/profile' },
-    { name: 'SUPPORT', path: '/support' },
+    ...(settings.categories?.filter(c => c.enabled).map(c => ({ name: c.name.toUpperCase(), path: c.link })) || [
+      { name: 'RANKS', path: '/ranks' },
+      { name: 'COINS', path: '/coins' }
+    ])
   ];
 
   if (loading) {

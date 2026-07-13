@@ -12,6 +12,7 @@ export default function Profile() {
   const { settings } = useSettingsStore();
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('plugins');
 
   useEffect(() => {
     const fetchOrders = async () => {

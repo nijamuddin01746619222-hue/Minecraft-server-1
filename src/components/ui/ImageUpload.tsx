@@ -1,3 +1,4 @@
+import React from "react";
 import { useState, useRef } from 'react';
 import { useSettingsStore } from '../../store/useSettingsStore';
 import { Upload, Link as LinkIcon, Image as ImageIcon } from 'lucide-react';

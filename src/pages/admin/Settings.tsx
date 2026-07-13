@@ -140,14 +140,69 @@ export default function Settings() {
             <div className="flex items-center gap-4">
             </div>
           </div>
-          <div>
-            <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Home Page - "Ranks" Button Image</label>
-            <ImageUpload value={formData.homeRanksImage || ""} onChange={url => setFormData({...formData, homeRanksImage: url})} />
-          </div>
-          <div>
-            <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Home Page - "Pebbles" Button Image</label>
-            <ImageUpload value={formData.homePebblesImage || ""} onChange={url => setFormData({...formData, homePebblesImage: url})} />
-          </div>
+        </div>
+      </div>
+
+      <div className="retro-card overflow-hidden">
+        <div className="p-6 border-b-2 border-black bg-gray-50">
+          <h2 className="text-xl font-bold font-pixel">Category Buttons (Homepage)</h2>
+        </div>
+        <div className="p-6 space-y-4">
+          {formData.categories?.map((cat, idx) => (
+            <div key={cat.id} className="p-4 border-2 border-black bg-white rounded-lg flex flex-col gap-4">
+              <div className="flex justify-between items-center">
+                <h3 className="font-bold text-black uppercase">{cat.name} Button</h3>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" checked={cat.enabled} onChange={e => {
+                    const newCats = [...(formData.categories || [])];
+                    newCats[idx].enabled = e.target.checked;
+                    setFormData({...formData, categories: newCats});
+                  }} className="sr-only peer" />
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary border-2 border-black"></div>
+                </label>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Button Name</label>
+                  <input type="text" value={cat.name} onChange={e => {
+                    const newCats = [...(formData.categories || [])];
+                    newCats[idx].name = e.target.value;
+                    setFormData({...formData, categories: newCats});
+                  }} className="w-full bg-gray-50 border-2 border-black rounded-lg p-2 text-black font-bold outline-none" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Button Link</label>
+                  <input type="text" value={cat.link} onChange={e => {
+                    const newCats = [...(formData.categories || [])];
+                    newCats[idx].link = e.target.value;
+                    setFormData({...formData, categories: newCats});
+                  }} className="w-full bg-gray-50 border-2 border-black rounded-lg p-2 text-black font-bold outline-none" />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Button Icon</label>
+                  <ImageUpload value={cat.icon || ""} onChange={url => {
+                    const newCats = [...(formData.categories || [])];
+                    newCats[idx].icon = url;
+                    setFormData({...formData, categories: newCats});
+                  }} />
+                </div>
+              </div><button type="button" onClick={() => {
+                const newCats = [...(formData.categories || [])];
+                newCats.splice(idx, 1);
+                setFormData({...formData, categories: newCats});
+              }} className="mt-4 px-4 py-2 bg-red-100 text-red-600 border-2 border-red-600 rounded font-bold text-xs hover:bg-red-200 transition-colors">
+                Remove Button
+              </button>
+            </div>
+          ))}
+          <button type="button" onClick={() => {
+            const newCats = [...(formData.categories || [])];
+            newCats.push({ id: 'cat_' + Date.now(), name: 'New Button', icon: '', link: '/', enabled: true });
+            setFormData({...formData, categories: newCats});
+          }} className="w-full py-3 bg-gray-100 border-2 border-dashed border-gray-400 rounded-lg text-gray-600 font-bold hover:bg-gray-200 hover:text-black transition-colors flex items-center justify-center gap-2">
+            <Plus className="w-5 h-5" /> Add New Button
+          </button>
+
           <div>
             <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Right Side Banner (URL)</label>
             <ImageUpload value={formData.rightSideBanner || ""} onChange={url => setFormData({...formData, rightSideBanner: url})} />

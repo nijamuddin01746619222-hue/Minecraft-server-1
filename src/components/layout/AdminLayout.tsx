@@ -1,3 +1,4 @@
+import React from 'react';
 import { Outlet, NavLink, useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../../store/useAuthStore';
 import { 
@@ -12,7 +13,8 @@ import {
   CreditCard,
   Palette,
   Megaphone,
-  Globe, ShieldAlert
+  Globe, ShieldAlert,
+  ChevronDown, ChevronRight, Layers, BarChart3, FileText, Sliders
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { useSettingsStore } from '../../store/useSettingsStore';
@@ -49,6 +51,8 @@ export default function AdminLayout() {
   if (user?.email?.toLowerCase() === 'taher@gmail.com') {
     navItemsSettings.push({ name: 'Admins', path: '/admin/admins', icon: ShieldAlert } as any);
   }
+
+
 
   return (
     <div className="flex h-screen bg-background">

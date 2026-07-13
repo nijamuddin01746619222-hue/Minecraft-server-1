@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSettingsStore } from '../../store/useSettingsStore';
-import { Users, Award, Zap, History } from 'lucide-react';
+import { useAuthStore } from '../../store/useAuthStore';
+import { Users, Award, Zap, History, Plus } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { db } from '../../lib/firebase';
 import { collection, query, orderBy, limit, getDocs } from 'firebase/firestore';
@@ -16,8 +17,11 @@ const mockDonators = [
 
 export default function Home() {
   const { settings } = useSettingsStore();
+  const { user, isAdminLoggedIn } = useAuthStore();
   const [players, setPlayers] = useState(0);
   const [recentOrders, setRecentOrders] = useState<any[]>([]);
+  const [productCounts, setProductCounts] = useState<Record<string, number>>({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRecentOrders = async () => {
@@ -80,16 +84,16 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6">
+        <div className="grid grid-cols-2 gap-4 pt-6 max-w-3xl mx-auto">
           <button 
             onClick={handleCopyIp}
             className="w-full sm:w-auto bg-white retro-border border-black rounded-xl px-8 py-4 flex flex-col items-center justify-center hover:-translate-y-1 hover:shadow-[0_8px_0_0_#000] transition-all group"
           >
-            <div className="flex items-center gap-3 mb-1">
-              <span className="w-3 h-3 rounded-full bg-green-500 animate-pulse"></span>
-              <span className="text-black font-black text-lg">{players} Players Online</span>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#4ade80] animate-pulse"></span>
+              <span className="text-black font-black text-xs sm:text-sm">{players} Players Online</span>
             </div>
-            <span className="text-sm font-bold text-gray-500 group-hover:text-black transition-colors">{settings.serverIp} - Click to copy</span>
+            <span className="text-[10px] sm:text-xs font-bold text-gray-500 group-hover:text-black transition-colors">{settings.serverIp} - Click to copy</span>
           </button>
 
           {settings.discordLink && (
@@ -99,62 +103,66 @@ export default function Home() {
               rel="noreferrer"
               className="w-full sm:w-auto bg-primary retro-border border-black rounded-xl px-8 py-4 flex flex-col items-center justify-center hover:-translate-y-1 hover:shadow-[0_8px_0_0_#000] transition-all group"
             >
-              <div className="flex items-center gap-3 mb-1">
-                <span className="w-3 h-3 rounded-full bg-blue-500 animate-pulse"></span>
-                <span className="text-black font-black text-lg">6,133 Total Members</span>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#005c66] animate-pulse"></span>
+                <span className="text-black font-black text-xs sm:text-sm">6,133 Total Members</span>
               </div>
-              <span className="text-sm font-bold text-gray-800 group-hover:text-black transition-colors">Click to Join Discord</span>
+              <span className="text-[10px] sm:text-xs font-bold text-gray-800 group-hover:text-black transition-colors">Click to Join Discord</span>
             </a>
           )}
         </div>
       </section>
 
       {/* Main Categories */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <Link 
-          to="/ranks" 
-          className="group relative bg-primary/20 retro-border border-black rounded-xl p-8 overflow-hidden flex items-center justify-between hover:-translate-y-2 hover:shadow-[0_12px_0_0_#000] hover:bg-primary/30 transition-all duration-300"
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <div className="relative z-10 max-w-[60%]">
-            <h2 className="text-3xl font-pixel text-black mb-3">Ranks</h2>
-            <p className="text-gray-800 font-bold leading-snug">
-              Unlock exclusive perks, commands & cosmetics
-            </p>
-          </div>
-          <div className="relative z-10">
-            {settings.homeRanksImage ? (
-              <img src={settings.homeRanksImage} alt="Ranks" className="w-24 h-24 object-contain group-hover:scale-110 group-hover:rotate-6 transition-all duration-300" />
-            ) : (
-              <Zap className="w-20 h-20 text-primary opacity-80 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300" />
-            )}
-          </div>
-        </Link>
+      <section className="grid grid-cols-2 gap-4">
+        {(settings.categories && settings.categories.length > 0 ? settings.categories : [
+          { id: 'ranks', name: 'Ranks', icon: settings.homeRanksImage || '', link: '/ranks', enabled: true },
+          { id: 'pebbles', name: 'Pebbles', icon: settings.homePebblesImage || '', link: '/coins', enabled: true },
+          { id: 'plugins', name: 'Plugins', icon: '', link: '/plugins', enabled: true },
+          { id: 'setups', name: 'Server Setups', icon: '', link: '/setups', enabled: true },
+          { id: 'textures', name: 'Textures', icon: '', link: '/textures', enabled: true }
+        ]).filter(c => c.enabled).map(cat => {
+          let defaultDesc = "";
+          if (cat.id === 'ranks') defaultDesc = "Unlock exclusive perks, commands & cosmetics";
+          if (cat.id === 'pebbles') defaultDesc = "In-game currency for the FIEXFALL store";
+          if (cat.id === 'plugins') defaultDesc = "Powerful plugins to enhance your server";
+          if (cat.id === 'setups') defaultDesc = "Professional server setups ready to use";
+          if (cat.id === 'textures') defaultDesc = "High quality textures for better experience";
 
-        <Link 
-          to="/coins" 
-          className="group relative bg-primary/20 retro-border border-black rounded-xl p-8 overflow-hidden flex items-center justify-between hover:-translate-y-2 hover:shadow-[0_12px_0_0_#000] hover:bg-primary/30 transition-all duration-300"
-        >
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <div className="relative z-10 max-w-[60%]">
-            <h2 className="text-3xl font-pixel text-black mb-3">Pebbles</h2>
-            <p className="text-gray-800 font-bold leading-snug">
-              In-game currency for the FIEXFALL store
-            </p>
-          </div>
-          <div className="relative z-10">
-            {settings.homePebblesImage ? (
-              <img src={settings.homePebblesImage} alt="Pebbles" className="w-24 h-24 object-contain group-hover:scale-110 group-hover:rotate-6 transition-all duration-300" />
-            ) : (
-              <img src="/pebbles.png" alt="Pebbles" className="w-20 h-20 object-contain opacity-80 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300" onError={(e) => { e.currentTarget.style.display='none' }} />
-            )}
-          </div>
-        </Link>
+          return (
+            <div key={cat.id} className="relative group/cat">
+              <Link 
+                to={cat.link} 
+                className="group relative bg-[#c6f0e3] border border-black rounded-xl p-4 overflow-hidden flex flex-row items-center justify-between transition-all duration-300"
+              >
+                <div className="relative z-10 flex-1 pr-2">
+                  <h2 className="text-lg sm:text-xl font-pixel text-black mb-1.5 tracking-wide">{cat.name}</h2>
+                  <p className="text-black/70 font-medium text-[10px] sm:text-xs leading-tight">
+                    {defaultDesc}
+                  </p>
+                  <p className="mt-1.5 text-black font-bold text-[10px] sm:text-[11px] opacity-70">
+                    {productCounts[cat.id] || 0} Item{productCounts[cat.id] !== 1 ? 's' : ''}
+                  </p>
+                </div>
+                <div className="relative z-10 w-12 h-12 sm:w-16 sm:h-16 flex-shrink-0 flex items-center justify-end">
+                  {cat.icon ? (
+                    <img src={cat.icon} alt={cat.name} className="w-full h-full object-contain pixelated" style={{ imageRendering: 'pixelated' }} />
+                  ) : (
+                    <Zap className="w-8 h-8 sm:w-10 sm:h-10 text-black opacity-50" />
+                  )}
+                </div>
+              </Link>
+              
+              
+            </div>
+          );
+        })}
+        
       </section>
 
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+      <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
         {/* Top & Recent Donators */}
-        <div className={`bg-white retro-border border-black rounded-xl p-6 ${settings.rightSideBanner ? '' : 'md:col-span-2'}`}>
+        <div className={`bg-white border border-black rounded-xl p-6 ${settings.rightSideBanner ? '' : 'md:col-span-2'}`}>
           <h3 className="text-2xl font-pixel text-black mb-6 flex items-center gap-2">
             <Award className="w-6 h-6 text-primary" /> Top / Recent Donators
           </h3>
@@ -196,7 +204,7 @@ export default function Home() {
         {/* Right Side Banner */}
         {settings.rightSideBanner && (
           <div className="w-full max-w-sm ml-auto">
-            <img src={settings.rightSideBanner} alt="Banner" className="w-full h-auto rounded-xl retro-border border-black" />
+            <img src={settings.rightSideBanner} alt="Banner" className="w-full h-auto rounded-xl border border-black" />
           </div>
         )}
       </section>

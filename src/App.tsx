@@ -94,6 +94,9 @@ function App() {
           <Route path="category/:categoryId" element={<CategoryPage />} />
           <Route path="ranks" element={<CategoryPage type="ranks" />} />
           <Route path="coins" element={<CategoryPage type="coins" />} />
+          <Route path="plugins" element={<CategoryPage type="plugins" />} />
+          <Route path="setups" element={<CategoryPage type="setups" />} />
+          <Route path="textures" element={<CategoryPage type="textures" />} />
           <Route path="product/:id" element={<ProductDetails />} />
           <Route path="cart" element={<Cart />} />
           <Route path="checkout" element={<Checkout />} />
@@ -107,7 +110,7 @@ function App() {
 
         {/* Admin Routes */}
         <Route path="/admin">
-          <Route index element={isAdminLoggedIn || user?.role === 'admin' || user?.role === 'super_admin' ? <Navigate to="/admin/dashboard" replace /> : <Navigate to='/auth' replace />} />
+          <Route index element={isAdminLoggedIn || user?.role === 'admin' || user?.role === 'super_admin' ? <Navigate to="/admin/dashboard" replace /> : <AdminLogin />} />
           <Route element={isAdminLoggedIn || user?.role === 'admin' || user?.role === 'super_admin' ? <AdminLayout /> : <Navigate to="/admin" replace />}>
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="products" element={<Products />} />
