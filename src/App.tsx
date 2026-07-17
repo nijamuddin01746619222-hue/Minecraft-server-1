@@ -9,6 +9,7 @@ import CategoryPage from './pages/store/CategoryPage';
 import ProductDetails from './pages/store/ProductDetails';
 import Cart from './pages/store/Cart';
 import Checkout from './pages/store/Checkout';
+import PaymentGateway from './pages/store/PaymentGateway';
 import Profile from './pages/store/Profile';
 import Support from './pages/store/Support';
 import Terms from './pages/store/Terms';
@@ -100,6 +101,7 @@ function App() {
           <Route path="product/:id" element={<ProductDetails />} />
           <Route path="cart" element={<Cart />} />
           <Route path="checkout" element={<Checkout />} />
+          <Route path="payment" element={<PaymentGateway />} />
           <Route path="profile" element={<Profile />} />
           <Route path="support" element={<Support />} />
           <Route path="terms" element={<Terms />} />
