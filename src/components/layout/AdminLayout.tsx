@@ -45,6 +45,7 @@ export default function AdminLayout() {
   ];
 
   const navItemsSettings = [
+    { name: 'Auto Pay', path: '/admin/autopay', icon: CreditCard },
     { name: 'System Settings', path: '/admin/settings', icon: Settings },
   ];
 

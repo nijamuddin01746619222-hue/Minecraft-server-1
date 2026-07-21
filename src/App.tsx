@@ -24,6 +24,7 @@ import Products from './pages/admin/Products';
 import Orders from './pages/admin/Orders';
 import Users from './pages/admin/Users';
 import Settings from './pages/admin/Settings';
+import AutoPay from './pages/admin/AutoPay';
 import Admins from './pages/admin/Admins';
 
 import { useAuthStore } from './store/useAuthStore';
@@ -119,6 +120,7 @@ function App() {
             <Route path="orders" element={<Orders />} />
             <Route path="users" element={<Users />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="autopay" element={<AutoPay />} />
             <Route path="admins" element={<Admins />} />
           </Route>
         </Route>

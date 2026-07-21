@@ -5,7 +5,9 @@ import { useSettingsStore } from '../../store/useSettingsStore';
 import { useCartStore } from '../../store/useCartStore';
 import { useAuthStore } from '../../store/useAuthStore';
 import { db } from '../../lib/firebase';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, query as fsQuery, where, getDocs, doc, updateDoc, increment } from 'firebase/firestore';
+import { rtdb } from '../../lib/firebase';
+import { ref, get, query as rtdbQuery, orderByChild, equalTo } from 'firebase/database';
 import toast from 'react-hot-toast';
 
 export default function PaymentGateway() {
@@ -61,6 +63,53 @@ export default function PaymentGateway() {
     const toastId = toast.loading('Processing order...');
 
     try {
+      const isAutoPay = settings.autoPayment?.enabled;
+      let orderStatus = 'pending';
+
+      if (isAutoPay) {
+        // 1. Check if txid already used
+        const usedQ = fsQuery(collection(db, 'usedTransactions'), where('txid', '==', transactionId.trim()));
+        const usedSnap = await getDocs(usedQ);
+        if (!usedSnap.empty) {
+          toast.error('এই ট্রানজেকশন আইডিটি ইতিমধ্যে ব্যবহারিত হয়েছে');
+          setLoading(false);
+          toast.dismiss(toastId);
+          return;
+        }
+
+        // 2. Find txid in Realtime DB
+        const txRef = ref(rtdb, 'XNXANIKPAY');
+        const q = rtdbQuery(txRef, orderByChild('txid'), equalTo(transactionId.trim()));
+        const snapshot = await get(q);
+
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const txs = Object.values(data) as any[];
+          const tx = txs[0];
+          
+          // Note: we can optionally check amount if needed: if (tx.amount >= totalAmount)
+          // The prompt says: "যত টাকা পাঠাইছে সেটি ইউজারের প্রোডাক্ট ক্রয় হয়ে যাবে"
+          // We will mark it as completed since we found it
+          orderStatus = 'approved';
+
+          // 3. Mark as used
+          await addDoc(collection(db, 'usedTransactions'), {
+            txid: transactionId.trim(),
+            method: activeMethod,
+            amount: tx.amount,
+            username: checkoutData.minecraftUsername,
+            email: checkoutData.email,
+            usedAt: serverTimestamp()
+          });
+
+        } else {
+          toast.error('Transaction ID not found');
+          setLoading(false);
+          toast.dismiss(toastId);
+          return;
+        }
+      }
+
       const orderData = {
         userId: user?.id || null,
         minecraftUsername: checkoutData.minecraftUsername,
@@ -71,18 +120,30 @@ export default function PaymentGateway() {
         paymentMethod: activeMethod,
         transactionId: transactionId.trim(),
         senderNumber: '',
-        status: 'pending',
+        status: orderStatus,
         createdAt: serverTimestamp(),
       };
 
+
       await addDoc(collection(db, 'orders'), orderData);
+      
+      if (orderStatus === 'approved' && user?.id) {
+        try {
+          await updateDoc(doc(db, 'users', user.id), {
+            totalSpent: increment(totalAmount)
+          });
+        } catch (e) {
+          console.error('Error updating user spent:', e);
+        }
+      }
       
       clearCart();
       toast.dismiss(toastId);
       setShowSuccess(true);
     } catch (error) {
       console.error('Checkout error:', error);
-      toast.error('Failed to place order. Try again.', { id: toastId });
+      toast.error('Failed to process payment');
+      toast.dismiss(toastId);
       setLoading(false);
     }
   };

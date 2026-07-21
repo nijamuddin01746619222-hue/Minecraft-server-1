@@ -40,6 +40,7 @@ export interface SiteSettings {
     link: string;
     enabled: boolean;
   }[];
+  autoPayment?: { enabled: boolean; };
   paymentMethods: {
     bkash: { enabled: boolean; number: string; type: string };
     nagad: { enabled: boolean; number: string; type: string };
@@ -75,6 +76,7 @@ const defaultSettings: SiteSettings = {
     { id: 'setups', name: 'Server Setups', icon: '', link: '/setups', enabled: true },
     { id: 'textures', name: 'Textures', icon: '', link: '/textures', enabled: true }
   ],
+  autoPayment: { enabled: false },
   paymentMethods: {
     bkash: { enabled: true, number: '01700000000', type: 'Personal' },
     nagad: { enabled: false, number: '', type: 'Personal' },
