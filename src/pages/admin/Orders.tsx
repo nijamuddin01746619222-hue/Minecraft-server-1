@@ -93,6 +93,7 @@ export default function Orders() {
                   <td className="p-4">
                     <span className={`px-2 py-1 rounded text-xs font-bold uppercase ${
                       order.status === 'approved' ? 'bg-green-500/20 text-green-500' :
+                      order.status === 'completed' ? 'bg-blue-500/20 text-blue-500' :
                       order.status === 'rejected' ? 'bg-red-500/20 text-red-500' :
                       order.status === 'refunded' ? 'bg-orange-500/20 text-orange-500' :
                       'bg-yellow-500/20 text-yellow-500'

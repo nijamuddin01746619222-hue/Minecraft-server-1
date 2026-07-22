@@ -29,7 +29,7 @@ export default function Cart() {
 
   return (
     <div className="max-w-5xl mx-auto w-full pb-12 pt-8">
-      <h1 className="text-3xl font-pixel text-black mb-8 tracking-widest uppercase">YOUR CART <span className="text-gray-500 text-lg font-bold ml-2">({items.length} items)</span></h1>
+      <h1 className="text-3xl font-pixel text-black mb-8 tracking-widest uppercase">YOUR CART <span className="text-gray-500 text-lg font-bold ml-2">({items.reduce((acc, item) => acc + item.quantity, 0)} items)</span></h1>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-4">

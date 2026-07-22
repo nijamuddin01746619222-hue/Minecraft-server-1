@@ -43,6 +43,7 @@ export default function Profile() {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
+      case 'completed': return <CheckCircle className="w-5 h-5 text-blue-500" />;
       case 'approved': return <CheckCircle className="w-5 h-5 text-green-500" />;
       case 'rejected': return <XCircle className="w-5 h-5 text-red-500" />;
       case 'refunded': return <RefreshCw className="w-5 h-5 text-orange-500" />;
@@ -52,6 +53,7 @@ export default function Profile() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
+      case 'completed': return 'text-blue-500 bg-blue-500/10 border-blue-500/20';
       case 'approved': return 'text-green-500 bg-green-500/10 border-green-500/20';
       case 'rejected': return 'text-red-500 bg-red-500/10 border-red-500/20';
       case 'refunded': return 'text-orange-500 bg-orange-500/10 border-orange-500/20';
@@ -115,7 +117,7 @@ export default function Profile() {
                   </div>
                   <div className={`px-3 py-1 rounded-full border text-xs font-bold uppercase flex items-center gap-1.5 ${getStatusColor(order.status)}`}>
                     {getStatusIcon(order.status)}
-                    {order.status === 'approved' ? 'Confirmed' : order.status}
+                    {order.status === 'approved' ? 'Paid (Pending)' : order.status === 'completed' ? 'Completed' : order.status}
                   </div>
                 </div>
                 

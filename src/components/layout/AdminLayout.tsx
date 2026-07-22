@@ -13,7 +13,7 @@ import {
   CreditCard,
   Palette,
   Megaphone,
-  Globe, ShieldAlert,
+  Globe, ShieldAlert, CheckCircle,
   ChevronDown, ChevronRight, Layers, BarChart3, FileText, Sliders
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
@@ -41,6 +41,7 @@ export default function AdminLayout() {
   const navItemsManage = [
     { name: 'Products', path: '/admin/products', icon: Package },
     { name: 'Orders', path: '/admin/orders', icon: ShoppingCart },
+    { name: 'Payment Complete', path: '/admin/payment-complete', icon: CheckCircle },
     { name: 'Users', path: '/admin/users', icon: Users },
   ];
 

@@ -24,6 +24,23 @@ export default function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    const fetchProductCounts = async () => {
+      try {
+        const snap = await getDocs(collection(db, 'products'));
+        const counts = {};
+        snap.docs.forEach(doc => {
+          const cat = doc.data().category;
+          if (cat && doc.data().enabled !== false) {
+            counts[cat] = (counts[cat] || 0) + 1;
+          }
+        });
+        setProductCounts(counts);
+      } catch (e) {
+        console.error('Error fetching product counts:', e);
+      }
+    };
+    fetchProductCounts();
+
     const fetchRecentOrders = async () => {
       try {
         const q = query(collection(db, 'orders'), orderBy('createdAt', 'desc'), limit(10));
@@ -141,7 +158,7 @@ export default function Home() {
                     {defaultDesc}
                   </p>
                   <p className="mt-1.5 text-black font-bold text-[10px] sm:text-[11px] opacity-70">
-                    {productCounts[cat.id] || 0} Item{productCounts[cat.id] !== 1 ? 's' : ''}
+                    {productCounts[cat.id] || productCounts[cat.link?.replace('/', '')] || 0} Item{(productCounts[cat.id] || productCounts[cat.link?.replace('/', '')]) !== 1 ? 's' : ''}
                   </p>
                 </div>
                 <div className="relative z-10 w-12 h-12 sm:w-16 sm:h-16 flex-shrink-0 flex items-center justify-end">

@@ -5,8 +5,10 @@ import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase
 import { Plus, Edit2, Trash2, X, Image as ImageIcon, Upload } from 'lucide-react';
 import ImageUpload from '../../components/ui/ImageUpload';
 import toast from 'react-hot-toast';
+import { useSettingsStore } from '../../store/useSettingsStore';
 
 export default function Products() {
+  const { settings } = useSettingsStore();
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -235,14 +237,18 @@ export default function Products() {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Category</label>
-                      <select value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full bg-gray-50 border-2 border-black rounded-lg p-3 text-black font-bold outline-none focus:ring-2 focus:ring-primary">
-                        <option value="ranks">Ranks</option>
-                        <option value="coins">Pebbles (Coins)</option>
-                        <option value="plugins">Plugins</option>
-                        <option value="setups">Server Setups</option>
-                        <option value="textures">Textures</option>
-                        <option value="custom">Custom</option>
-                      </select>
+                      
+  <select value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full bg-gray-50 border-2 border-black rounded-lg p-3 text-black font-bold outline-none focus:ring-2 focus:ring-primary">
+    {settings.categories?.filter(c => c.enabled).map(c => (
+      <option key={c.id} value={c.id}>{c.name}</option>
+    ))}
+    <option value="ranks">Ranks</option>
+    <option value="coins">Pebbles (Coins)</option>
+    <option value="plugins">Plugins</option>
+    <option value="setups">Server Setups</option>
+    <option value="textures">Textures</option>
+  </select>
+  
                     </div>
                     <div>
                       <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Status</label>

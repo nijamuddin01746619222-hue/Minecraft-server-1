@@ -78,6 +78,15 @@ export default function StoreLayout() {
           </div>
 
           <div className="flex items-center gap-4">
+            <Link to="/cart" className="relative p-2 text-gray-600 hover:text-black">
+              <ShoppingCart className="w-5 h-5" />
+              {items.length > 0 && (
+                <span className="absolute top-0 right-0 w-4 h-4 bg-primary text-black text-[10px] font-bold flex items-center justify-center rounded-full">
+                  {items.reduce((acc, item) => acc + item.quantity, 0)}
+                </span>
+              )}
+            </Link>
+
             {user ? (
               <div className="flex items-center gap-3 relative">
                 <Link to="/profile" className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-md transition-colors border border-gray-200">
@@ -161,6 +170,25 @@ export default function StoreLayout() {
                   {link.name}
                 </NavLink>
               ))}
+              
+              <NavLink
+                to="/cart"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `px-4 py-3 text-sm font-bold tracking-wider rounded-md transition-colors flex items-center justify-between ${
+                    isActive 
+                      ? "text-primary bg-primary/10" 
+                      : "text-gray-600 hover:text-black hover:bg-white/5"
+                  }`
+                }
+              >
+                <span>CART</span>
+                {items.length > 0 && (
+                  <span className="bg-primary text-black text-xs px-2 py-0.5 rounded-full">
+                    {items.reduce((acc, item) => acc + item.quantity, 0)} items
+                  </span>
+                )}
+              </NavLink>
               {!user ? (
                 <div className="pt-4 border-t border-black flex flex-col gap-2">
                   <Link to="/auth" onClick={() => setIsMobileMenuOpen(false)} className="px-4 py-3 text-center text-sm font-bold bg-gray-800 text-black rounded-md text-white">

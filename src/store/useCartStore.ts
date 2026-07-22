@@ -28,10 +28,15 @@ export const useCartStore = create<CartState>()(
     (set, get) => ({
       items: [],
       addItem: (item) => set((state) => {
-        // We will just add it. If they buy now, maybe we should clear cart first?
-        // Let's clear cart if they use Buy Now on product page, so they only checkout this item.
-        // But for generic add, we append.
-        return { items: [item] }; // Assuming "Buy Now" behavior: only 1 item at a time in checkout based on user flow.
+        const existingItem = state.items.find(i => i.id === item.id);
+        if (existingItem) {
+          return {
+            items: state.items.map(i => 
+              i.id === item.id ? { ...i, quantity: i.quantity + item.quantity } : i
+            )
+          };
+        }
+        return { items: [...state.items, item] };
       }),
       removeItem: (id) => set((state) => ({
         items: state.items.filter((i) => i.id !== id),
